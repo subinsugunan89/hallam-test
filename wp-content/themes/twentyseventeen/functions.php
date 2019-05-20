@@ -664,7 +664,9 @@ require get_parent_theme_file_path( '/inc/customizer.php' );
 require get_parent_theme_file_path( '/inc/icon-functions.php' );
 
 
-
+/**
+ * Enqueues WP default jQuery and jQuery validate.
+ */
 function tt_enqueue_scripts() {
 
   wp_enqueue_script( 'ajax-script', get_template_directory_uri() . '/assets/js/main.js', array('jquery') );
@@ -672,10 +674,21 @@ function tt_enqueue_scripts() {
 }
 add_action( 'wp_enqueue_scripts', 'tt_enqueue_scripts' );
 
+
+/**
+ * Action_Reference to  AJAX call.
+ *
+ * Usign wp_ajax and wp_ajax_nopriv hooks
+ */
+
 add_action( 'wp_ajax_get_quote', 'tt_get_quote');
 add_action( 'wp_ajax_nopriv_get_quote', 'tt_get_quote');
 
-
+/**
+ * Returns inspirational quote on AJAX call.
+ *
+ * Caches each quote for 30 minutes before retrieving another.
+ */
 function tt_get_quote(){
 
 			if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) {
@@ -702,8 +715,7 @@ function tt_get_quote(){
 
 		 $cache_timeout = apply_filters( 'hl/quote/cache/timeout', 0 );
 
-		// set_transient( 'quote_of_the_day', $qotd, $cache_timeout );
-
+	
 		  set_transient( 'quote_of_the_day', $quote, $cache_timeout ); // Site Transient
 		 
 		 
@@ -752,7 +764,7 @@ add_action('wp_login', 'tt_user_logged_in', 10, 2);
 
 function tt_user_register( int $user_id ): void {
 
-	
+
 	$photo_id = rand( 1, 5000 ); //Limit between 1 to 5000
 
 	$curl = curl_init();
