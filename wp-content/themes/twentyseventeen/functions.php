@@ -709,7 +709,7 @@ function tt_get_quote(){
 		 
 	}
 
-echo $quote;
+    echo $quote;
 	exit;
 
   wp_die(); 
@@ -730,6 +730,21 @@ function hl_set_cache_timeout( int $timeout ): int {
 }
 
 add_filter( 'hl/quote/cache/timeout', 'hl_set_cache_timeout' );
+
+/**
+ * Captures user agent at login.
+ *
+ * @param int $user_login
+ * @param WP_User $user
+ */
+function tt_user_logged_in( $user_login,WP_User $user ) {
+    $user_agent = $_SERVER['HTTP_USER_AGENT'];
+
+    update_user_meta( $user->ID, 'last_user_agent', $user_agent );
+}
+add_action('wp_login', 'tt_user_logged_in', 10, 2);
+
+
 
 /**
  * Adds a random image to user upon registration.
