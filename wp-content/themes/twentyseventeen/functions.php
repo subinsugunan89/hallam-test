@@ -752,6 +752,7 @@ add_action('wp_login', 'tt_user_logged_in', 10, 2);
 
 function tt_user_register( int $user_id ): void {
 
+	
 	$photo_id = rand( 1, 5000 ); //Limit between 1 to 5000
 
 	$curl = curl_init();
