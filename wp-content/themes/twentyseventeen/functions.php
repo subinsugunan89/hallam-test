@@ -744,16 +744,15 @@ function tt_user_logged_in( $user_login,WP_User $user ) {
 }
 add_action('wp_login', 'tt_user_logged_in', 10, 2);
 
-
-
 /**
  * Adds a random image to user upon registration.
  *
  * @param int $user_id
  */
+
 function tt_user_register( int $user_id ): void {
 
-	$photo_id = rand( 1, 10000 );
+	$photo_id = rand( 1, 5000 ); //Limit between 1 to 5000
 
 	$curl = curl_init();
 	curl_setopt_array( $curl, [
@@ -763,51 +762,11 @@ function tt_user_register( int $user_id ): void {
 	$response = curl_exec( $curl );
 	curl_close( $curl );
 
-	
-	update_user_meta( $user_id, 'register_image', $data->url );
+	$data = json_decode( $response );
+	if ($response) {
+		update_user_meta( $user_id, 'register_image', $data->url );
+	}
+
 }
 
-add_action( 'tt_user_logged_in', 'tt_user_register', 10, 1 );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// add_action( 'set_user_role', function( $user_id ) 
-// {
-
-// global $wpdb ;
-
-// 	$img_url = 'http://orig15.deviantart.net/9faa/f/2011/006/e/9/there__s_something_about_molly_by_avator-d36l074.jpg'; // this is a sample image url but you should add the image url from json api 
-// $post_id=$user_id;
-// $desc='';
-// echo $image = media_sideload_image($img_url, $post_id, $desc,'id');
-   
-//   $file='http://localhost/hallam_test/wp-content/uploads/2019/05/IMG_20181007_092937-1-100x100.jpg';            
-
-//     $attach_data = wp_generate_attachment_metadata($image, $file);
-//     wp_update_attachment_metadata($image, $attach_data);
-
-// echo '<pre>';
-// print_r($attach_data );
-// echo '</pre>';
-
-//     delete_metadata('post', null, '_wp_attachment_wp_user_avatar', $user_id, true);
-//     update_user_meta($user_id, '_wp_attachment_wp_user_avatar', $image);
-//     update_user_meta($user_id, $wpdb->get_blog_prefix($blog_id) . 'user_avatar', $image);
-
-// exit;
-//    // update_user_meta( $user_id, 'register_image', $data->url );
-
-// } );
+add_action( 'user_register', 'tt_user_register', 10, 1 );
